@@ -1,0 +1,17 @@
+{
+  "source": "Hound",
+  "root": "Bip01_Pelvis",
+  "chest": "Bip01_Neck",
+  "head": "Bip01_Head",
+  "nose": "BN_Nose_01",
+  "limbs": {
+    "A": {"role": "front_left", "endpoint": "Bip01_L_Finger0Nub", "bend": "Bip01_L_Forearm", "hip": [0.24, -0.45, 0.0]},
+    "B": {"role": "front_right", "endpoint": "Bip01_R_Finger0Nub", "bend": "Bip01_R_Forearm", "hip": [-0.24, -0.45, 0.0]},
+    "C": {"role": "rear_left", "endpoint": "Bip01_L_Toe0Nub", "bend": "Bip01_L_Calf", "hip": [0.24, 0.45, 0.0]},
+    "D": {"role": "rear_right", "endpoint": "Bip01_R_Toe0Nub", "bend": "Bip01_R_Calf", "hip": [-0.24, 0.45, 0.0]}
+  },
+  "robot": {"body_length": 0.9, "upper_length": 0.7, "lower_length": 0.7, "flexion_min_degrees": 8, "flexion_max_degrees": 160, "foot_radius": 0.035},
+  "contact": {"height_on": 0.10, "height_off": 0.16, "speed_on": 0.30, "speed_off": 0.60, "minimum_frames": 4, "blend_frames": 3, "ground_percentile": 5},
+  "quality": {"maximum_collapsed_fraction": 0.10, "minimum_root_height": 0.45, "maximum_endpoint_fit_mean": 0.25, "maximum_jerk_p95": 120, "minimum_supported_fraction": 0.5},
+  "notes": "Prototype thresholds in median source body-length units, speeds per second. Ground is estimated per clip, not observed. Robot dimensions are design units, not calibrated physical meters. Each source endpoint/bend pair can be reassigned to any A-D limb while retaining that target limb's hip."
+}

@@ -1,0 +1,59 @@
+diff --git a/BVH.py b/BVH.py
+index b4c7bac..e03cc59 100644
+--- a/BVH.py
++++ b/BVH.py
+@@ -232,7 +232,7 @@ def load(filename, start=None, end=None, order=None, world=True):
+     return (Animation(quat_rotations, positions, orients, offsets, parents), names, frametime)
+ 
+     
+-def save(filename, anim, names=None, frametime=1.0/24.0, order='xyz', positions=False, orients=True):
++def save(filename, anim, names=None, frametime=1.0/24.0, order='xyz', positions=False, orients=True, leaf_joints=False):
+     """
+     Saves an Animation to file as BVH
+     
+@@ -270,7 +270,7 @@ def save(filename, anim, names=None, frametime=1.0/24.0, order='xyz', positions=
+ 
+     # anim, names = anim.sort(names)
+     children = AnimationStructure.children_list(anim.parents)
+-    if anim.shape[1] > 1: # end sites exist only if there is more than a root vertex
++    if anim.shape[1] > 1 and not leaf_joints: # named leaves can be preserved as ordinary joints
+         end_sites = [i for i,c in enumerate(children) if len(c)==0]
+     else:
+         end_sites = []
+@@ -288,7 +288,7 @@ def save(filename, anim, names=None, frametime=1.0/24.0, order='xyz', positions=
+             (t, channelmap_inv[print_order[0]], channelmap_inv[print_order[1]], channelmap_inv[print_order[2]]))
+ 
+         for child in children[0]:
+-            t = save_joint(f, anim, names, t, child, print_order=print_order, children=children, positions=positions)
++            t = save_joint(f, anim, names, t, child, print_order=print_order, children=children, positions=positions, leaf_joints=leaf_joints)
+ 
+         t = t[:-1]
+         f.write("%s}\n" % t)
+@@ -318,9 +318,9 @@ def save(filename, anim, names=None, frametime=1.0/24.0, order='xyz', positions=
+             f.write("\n")
+     
+     
+-def save_joint(f, anim, names, t, i, print_order, children, positions=False):
++def save_joint(f, anim, names, t, i, print_order, children, positions=False, leaf_joints=False):
+     end_site = False
+-    if len(children[i]) == 0: #anim.parents[i+1] != i:
++    if len(children[i]) == 0 and not leaf_joints:
+         end_site = True
+ 
+     if not end_site:
+@@ -343,9 +343,12 @@ def save_joint(f, anim, names, t, i, print_order, children, positions=False):
+                 channelmap_inv[print_order[0]], channelmap_inv[print_order[1]], channelmap_inv[print_order[2]]))
+ 
+         for j in children[i]:
+-            t = save_joint(f, anim, names, t, j, print_order=print_order, children=children, positions=positions)
++            t = save_joint(f, anim, names, t, j, print_order=print_order, children=children, positions=positions, leaf_joints=leaf_joints)
++
++        if leaf_joints and len(children[i]) == 0:
++            f.write("%sEnd Site\n%s{\n%s\tOFFSET 0.0 0.0 0.0\n%s}\n" % (t, t, t, t))
+ 
+     t = t[:-1]
+     f.write("%s}\n" % t)
+     
+-    return t
+\ No newline at end of file
++    return t

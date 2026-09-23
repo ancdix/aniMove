@@ -1,0 +1,75 @@
+diff --git a/sample/generate.py b/sample/generate.py
+index 02f54c1..a7c3500 100644
+--- a/sample/generate.py
++++ b/sample/generate.py
+@@ -5,6 +5,8 @@ numpy array. This can be used to produce samples for FID evaluation.
+ """
+ from utils.fixseed import fixseed
+ import os
++import json
++import time
+ import numpy as np
+ import torch
+ from utils.parser_util import generate_args
+@@ -66,6 +68,8 @@ def main(args = None, cond_dict = None):
+         print(f'### Sampling [repetitions #{rep_i}]')
+         sample_fn = diffusion.p_sample_loop
+ 
++        torch.cuda.synchronize()
++        diffusion_started = time.perf_counter()
+         sample = sample_fn(
+             model,
+             (args.batch_size, max_joints, model.feature_len, n_frames),
+@@ -78,10 +82,13 @@ def main(args = None, cond_dict = None):
+             noise=None,
+             const_noise=False,
+         )
++        torch.cuda.synchronize()
++        diffusion_seconds = time.perf_counter() - diffusion_started
+ 
+         # Recover XYZ *positions* from matrix representation
+         bs, max_joints, n_feats, n_frames = sample.shape
+         for i, motion in enumerate(sample):
++            export_started = time.perf_counter()
+             n_joints = model_kwargs['y']["n_joints"][i].item()
+             motion = motion[:n_joints]
+             object_type = model_kwargs['y']["object_type"][i]
+@@ -94,15 +101,36 @@ def main(args = None, cond_dict = None):
+             #global_positions, out_anim = recover_from_bvh_rot_np(motion, parents, offsets)
+             out_anim, _1, _2 = animation_from_positions(positions=global_positions, parents=parents, offsets=offsets, iterations=150)
+             name_pref = '%s_rep_%d'%(object_type, rep_i)
+-            existing_npy_files = [filename for filename in os.listdir(out_path) if filename.startswith(name_pref) and filename.endswith('.npy')]
++            existing_npy_files = [filename for filename in os.listdir(out_path) if filename.startswith(name_pref) and filename.endswith('.npy') and not filename.endswith('.xyz.npy')]
+             existing_mp4_files = [filename for filename in os.listdir(out_path) if filename.startswith(name_pref) and filename.endswith('.mp4')]
+             npy_name = name_pref+'_#%d.npy'%(len(existing_npy_files))
+             mp4_name = name_pref+'_#%d.mp4'%(len(existing_mp4_files))
+             bvh_name = name_pref+'_#%d.bvh'%(len(existing_mp4_files))
+             plot_general_skeleton_3d_motion(pjoin(out_path, mp4_name), parents, global_positions, title=name_pref, fps=fps)
+             np.save(pjoin(out_path, npy_name), motion)
++            np.save(pjoin(out_path, npy_name.replace('.npy', '.xyz.npy')), global_positions)
+             if out_anim is not None:
+-                BVH.save(pjoin(out_path, bvh_name), out_anim, cond_dict[object_type]['joints_names'])
++                BVH.save(pjoin(out_path, bvh_name), out_anim, cond_dict[object_type]['joints_names'], frametime=1.0 / fps, leaf_joints=True)
++            else:
++                raise RuntimeError('BVH fitting failed for ' + npy_name)
++            metadata = {
++                'schema_version': 1, 'source_skeleton': object_type,
++                'seed': args.seed, 'repetition': rep_i, 'fps': fps,
++                'frames': n_frames, 'feature_shape': list(motion.shape),
++                'features': npy_name, 'xyz': npy_name.replace('.npy', '.xyz.npy'),
++                'bvh': bvh_name, 'preview': mp4_name,
++                'feature_representation': 'denormalized_anytop_13_features',
++                'xyz_representation': 'global_joint_positions',
++                'source_up': '+Y', 'source_forward': '+Z',
++                'units': 'upstream_normalized_units_not_calibrated_meters',
++                'joint_names': list(cond_dict[object_type]['joints_names']),
++                'parents': np.asarray(parents).tolist(),
++                'diffusion_seconds': diffusion_seconds,
++                'export_seconds': time.perf_counter() - export_started,
++            }
++            with open(pjoin(out_path, npy_name.replace('.npy', '.json')), 'w') as f:
++                json.dump(metadata, f, indent=2)
++            print('TIMING ' + json.dumps({key: metadata[key] for key in ('diffusion_seconds', 'export_seconds')}))
+             print("repetition #" + str(rep_i) + " ,created motion: "+ npy_name)
+ 
+ def encode_joints_names(joints_names, t5_conditioner): # joints names should be padded with None to be of max_len 

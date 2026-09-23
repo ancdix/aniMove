@@ -1,0 +1,82 @@
+diff --git a/sample/edit.py b/sample/edit.py
+index c63776b..7525682 100644
+--- a/sample/edit.py
++++ b/sample/edit.py
+@@ -8,6 +8,7 @@ import os
+ from os.path import join as pjoin
+ import numpy as np
+ import torch
++from moviepy.editor import ColorClip
+ from utils.parser_util import edit_args
+ from utils.model_util import create_model_and_diffusion_general_skeleton, load_model
+ from utils import dist_util
+@@ -44,6 +45,7 @@ def main(args = None, cond_dict = None):
+                                 'samples_{}_{}_seed{}'.format(name, niter, args.seed))
+     # mkdir outpath
+     os.makedirs(out_path, exist_ok=True)
++    args.num_samples = len(args.samples)
+     args.batch_size = args.num_samples  # Sampling a single batch from the testset, with exactly args.num_samples
+ 
+     print("Creating model and diffusion...")
+@@ -119,7 +121,8 @@ def main(args = None, cond_dict = None):
+ 
+         # Recover XYZ *positions* from matrix representation
+         bs, max_joints, n_feats, n_frames = sample.shape
+-        animations = np.empty(shape=(1 + bs // 5, bs % 5), dtype=object)
++        columns = min(5, bs)
++        animations = np.empty(shape=((bs + columns - 1) // columns, columns), dtype=object)
+         for i, motion in enumerate(sample):
+             n_joints = model_kwargs["y"]["n_joints"][i].item()
+             length = model_kwargs["y"]["lengths"][i].item()
+@@ -134,9 +137,9 @@ def main(args = None, cond_dict = None):
+                     joint: 0 if inpaint_mask[joint, frame] else 1
+                     for joint in range(n_joints)
+                 }
+-                for frame in range(n_frames)
++                for frame in range(length)
+             }
+-            motion = motion.cpu().permute(2, 0, 1).numpy() * std + mean
++            motion = motion.cpu().permute(2, 0, 1).numpy() * (std + 1e-6) + mean
+             offsets = cond_dict[object_type]["offsets"]
+             global_positions = recover_from_bvh_ric_np(motion)
+             #global_positions, out_anim = recover_from_bvh_rot_np(motion, parents, offsets)
+@@ -144,7 +147,7 @@ def main(args = None, cond_dict = None):
+             name_pref_i = name_pref + f"_{i}"
+             npy_name = name_pref_i + ".npy"
+             bvh_name = name_pref_i + ".bvh"
+-            animations[i // 5, i % 5] = plot_general_skeleton_correspondance(
++            animations[i // columns, i % columns] = plot_general_skeleton_correspondance(
+                 parents,
+                 joint2color,
+                 2,
+@@ -158,13 +161,16 @@ def main(args = None, cond_dict = None):
+                 'joint2color':joint2color,
+                 'sample_path':args.samples[i]
+             }
+-            np.save(pjoin(out_path, npy_name), data, allow_pickle=True)
++            np.save(pjoin(out_path, npy_name), motion)
++            np.save(pjoin(out_path, name_pref_i + ".xyz.npy"), global_positions)
+             if out_anim is not None:
+-                BVH.save(pjoin(out_path, bvh_name), out_anim, cond_dict[object_type]['joints_names'])
++                BVH.save(pjoin(out_path, bvh_name), out_anim, cond_dict[object_type]['joints_names'], frametime=1.0/fps, leaf_joints=True)
+             print("repetition #" + str(rep_i) + " ,created motion: "+ npy_name)
+         
+         mp4_name = name_pref + ".mp4"
+-        save_multiple_samples(out_path, mp4_name, animations, 20, model_kwargs["y"]["lengths"][i].max())
++        for empty in range(bs, animations.size):
++            animations.flat[empty] = ColorClip(size=animations.flat[0].size, color=(255, 255, 255), duration=max_frames/fps)
++        save_multiple_samples(out_path, mp4_name, animations, fps, max_frames)
+ 
+ def encode_joints_names(joints_names, t5_conditioner): # joints names should be padded with None to be of max_len 
+         names_tokens = t5_conditioner.tokenize(joints_names)
+@@ -187,7 +193,9 @@ def prepare_inpainting_inputs(motions, object_type, cond_dict, temporal_window,
+         joints_graph_dist = cond_dict['joints_graph_dist']
+         offsets = cond_dict['offsets']
+         joints_names_embs = encode_joints_names(cond_dict['joints_names'] , t5_conditioner).detach().cpu().numpy()
+-        batch.append(np.zeros((n_frames, n_joints, feature_len)))
++        if motion.shape != (n_frames, n_joints, feature_len) or not np.isfinite(motion).all():
++            raise ValueError("Expected finite denormalized (frames, joints, features) motion")
++        batch.append((motion - mean[None]) / (std[None] + 1e-6))
+         batch.append(n_frames)
+         batch.append(parents)
+         batch.append(tpos_first_frame)

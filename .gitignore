@@ -1,0 +1,8 @@
+external/
+.venv-anytop/
+__pycache__/
+*.pyc
+.env
+.generated/
+.cache/
+configs/condaenv.*.requirements.txt
