@@ -1,12 +1,12 @@
 # Pilgrim Machine — proposed execution plan
 
-Working plan, 2026-09-23. This translates the supplied spec and reference artwork into implementation milestones. The first blockout and direct-generation pilot are now implemented; see [measured results and remaining work](pilgrim_blockout_results.md). Numerical targets below remain proposed production gates unless a result explicitly reports their measurement.
+Working plan, 2026-09-23. This translates the supplied spec and reference artwork into implementation milestones. The blockout, direct-generation pilot, Devotional Hold, and a technically verified First Genuflection study are implemented; see [pilot results](pilgrim_blockout_results.md) and [loop results and control guide](pilgrim_devotional_loop_results.md). The [genuflection report](pilgrim_genuflection_results.md) records substantial authored correction: P4’s learned-primary-motion gate remains open. [Motion Harvest 001](pilgrim_motion_harvest_001.md) now supplies three generated phrases and a six-second Orient loop, with exact fitted-body retention through native phrases and measured edits. This advances primary motion discovery but does not establish new support-role transitions. Numerical targets below remain proposed production gates unless a result explicitly reports their measurement.
 
 ## Outcome
 
 Deliver a distinctive, reusable **rigged Pilgrim Machine with usable animation**, including an editable Blender master, a finished loop, and renderable artwork. AnyTop should contribute recognizable primary movement. Curation, guidance, timing, contact correction, and secondary motion are explicit production layers whose contribution remains inspectable.
 
-The first finished piece is **Pilgrim: First Genuflection**: stillness, distributed bow, asymmetric hand planting, four-contact settling, a small reorientation, and a different return path. Aim for 8–15 seconds; the spec's 14-second sequence is a storyboard target, not a fixed constraint on the first model experiment.
+The original first-piece storyboard, **Pilgrim: First Genuflection**, is preserved as an authored study. The current direction is discovery before choreography: generate unguided motion on the Pilgrim condition, identify useful phrases, name them afterward, and develop the strongest into a finished loop. The storyboard no longer determines the next generated behavior.
 
 **Confirmed workflow preference:** keep a simple blocked-out model through rig development, direct AnyTop testing, contact cleanup, and loop development. Detailed modeling, materials, fabric, and secondary ornament motion follow a successful blockout motion pass. The working blockout is an animated asset, not just a static modeling checkpoint.
 
@@ -143,7 +143,7 @@ Deliver: `pilgrim_master_v001.blend`, editable and baked Actions, the finished *
 
 After the first finished artwork, develop processional travel, four-contact crawl, role switching, and **Change of Species**. Then test three controlled morphology variants. Add rhythm/audio as a later performance layer once contact-preserving retiming works.
 
-Do not start with hundreds of samples, detailed cloth simulation, topology changes, or a custom UI. Increase batch size only after usable conditioning and a reliable review pipeline exist.
+The pilot and review pipeline now support a 120-sample harvest, explicitly requested after the genuflection study. Keep detailed cloth simulation and topology changes deferred until the discovered motion vocabulary is artistically convincing.
 
 ## Validation and contribution accounting
 
@@ -179,4 +179,6 @@ Build and validate in background Blender before appending a named Pilgrim scene 
 
 ## Immediate next implementation
 
-**P2/P3 on the verified blockout:** finish distal/contact/head controls and develop the selected direct AnyTop candidate into a contact-cleaned settling loop, preserving raw and fitted comparisons and measuring corrections. P0 and the P1 inference pilot are recorded in the results; direct motion is still provisional and has not passed production contact/loop gates. Keep detailed armor, fabric, and the ceremonial sequence deferred.
+**Review Motion Harvest 001 before more generation or detailing.** Orient, Listen, and Unfold were selected after unguided generation, with native timing and every fitted body/head frame retained. Orient also has a six-second loop: uniform half speed, a short boundary bridge, inferred contacts, and constant limb-clearance adjustments. All four assets pass saved-file contact, ground, mesh-sampling, and FK-bake checks. Review the aligned raw/final comparisons and measured corrections in the [harvest report](pilgrim_motion_harvest_001.md).
+
+The next artistic gate is whether these three upper-body gestures feel sufficiently distinct and usable. Their labels are interpretations, not generated semantics. Genuine contact-role diversity remains open: two candidates keep C/D supports and the third has only a short threshold-sensitive D break. Use that evidence to select the next conditioning or morphology experiment; do not add a prescribed support sequence and count it as discovered. Armor, fabric, and new storyboard choreography remain deferred.

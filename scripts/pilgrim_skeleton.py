@@ -84,12 +84,14 @@ def audit(d,xyz):
     ix={n:i for i,n in enumerate(d['names'])};ring_mins=[]
     for frame in xyz:
         center=frame[ix['SPINE_03']];normal=normalize(frame[ix['NECK']]-center)
+        if d['ring'].get('carrier')=='SPINE_02':normal=normalize(center-frame[ix['SPINE_02']])
+        center=center+normal*d['ring'].get('axial_offset',0.)
         for key in 'ABCD':
             for s in range(3):
                 p,q=frame[ix[key+'_'+str(s)]],frame[ix[key+'_'+str(s+1)]]
                 v=p[None]+np.linspace(0,1,51)[:,None]*(q-p)[None]-center
                 h=v@normal;rad=np.sqrt(np.maximum(0,(v*v).sum(axis=-1)-h*h))
-                dist=np.sqrt((rad-d['ring']['radius'])**2+h*h)-d['ring']['tube_radius']-.075
+                dist=np.sqrt((rad-d['ring']['radius'])**2+h*h)-d['ring']['tube_radius']-d['ring'].get('limb_capsule_radius',.075)
                 ring_mins.append(dist.min())
     interlimb=[]
     for frame in xyz:
@@ -101,7 +103,7 @@ def audit(d,xyz):
     return dict(max_bone_length_error=float(abs(got-lengths).max()),min_joint_height=float(xyz[...,1].min()),
                 min_ring_limb_capsule_clearance=float(min(ring_mins)),ring_limb_intersection_samples=int(sum(v<0 for v in ring_mins)),
                 min_interlimb_capsule_clearance=float(min(interlimb)),interlimb_intersection_samples=int(sum(v<0 for v in interlimb)),
-                scope='Bone lengths, joint heights, ring vs .075 limb capsule and .095-radius interlimb capsules; palms/torso require evaluated-mesh checks. No physical balance claim.')
+                scope='Bone lengths, joint heights, ring vs '+str(d['ring'].get('limb_capsule_radius',.075))+' limb capsule and .095-radius interlimb capsules; palms/torso require evaluated-mesh checks. No physical balance claim.')
 
 
 def main():

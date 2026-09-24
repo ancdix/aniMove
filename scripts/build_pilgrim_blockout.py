@@ -65,14 +65,17 @@ def build(d, xyz, poles, collection, controls, prefix='PILGRIM'):
         bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
         obj.data.materials.append(mat['gold']);g=obj.vertex_groups.new(name=bone);g.add(list(range(len(obj.data.vertices))),1,'REPLACE');mod=obj.modifiers.new('Rigid','ARMATURE');mod.object=rig;return obj
     # Ring plane follows the spine-to-neck axis; mesh is built in its rest orientation.
-    torus('WAIST_RING',rest[ix['SPINE_03']],d['ring']['radius'],d['ring']['tube_radius'],'SPINE_03')
+    ring_center=rest[ix['SPINE_03']]+(rest[ix['NECK']]-rest[ix['SPINE_03']])/np.linalg.norm(rest[ix['NECK']]-rest[ix['SPINE_03']])*d['ring'].get('axial_offset',0.)
+    torus('WAIST_RING',ring_center,d['ring']['radius'],d['ring']['tube_radius'],d['ring'].get('carrier','SPINE_03'))
     torus('HALO',rest[ix['HEAD']]+[0,.09,.16],.26,.012,'HEAD',(math.pi/2,0,0))
     for key in 'ABCD':
         attach=ix[key+'_0'];parent=parents[attach]
         link(key+'_CARRIER',rest[parent],rest[attach],.055,.055,'CARRIER_'+key,'dark')
         for k in range(3):
             n=key+'_'+str(k);j=ix[n];a,b=rest[j],rest[ix[key+'_'+str(k+1)]]
-            sphere(n+'_JOINT',a,.078,n,'dark');link(n+'_SEGMENT',a,b,.067 if k<2 else .045,.063,n)
+            sphere(n+'_JOINT',a,.078,n,'dark')
+            inset=d.get('geometry',{}).get('upper_shell_proximal_inset_fraction',0.) if key in 'AB' and k==0 else 0.
+            link(n+'_SEGMENT',a+inset*(b-a),b,.067 if k<2 else .045,.063,n)
         n=key+'_3';p=rest[ix[n]]
         cube(key+'_PALM',p+[0,-.015,-.017],(.10,.14,.043),n)
         # Three grouped toe/finger blocks only: no individual digit rig yet.

@@ -1,5 +1,7 @@
 # Pilgrim blockout and direct AnyTop pilot
 
+This report records P0/P1. The subsequent [Devotional Hold loop and control rig](pilgrim_devotional_loop_results.md) now complete the first usable animation milestone; pending rig/contact work described below is historical.
+
 The first Pilgrim blockout is built and loaded in Blender. It has a segmented tower, sensor/halo, torso ring, four three-segment limbs, simple contact pads, neutral limb labels, and an editable armature. Geometry remains deliberately simple; no fabric, weathering, detailed mechanisms, or final surfacing has been added.
 
 Two separate scenes distinguish authored rig testing from model output:

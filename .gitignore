@@ -6,3 +6,5 @@ __pycache__/
 .generated/
 .cache/
 configs/condaenv.*.requirements.txt
+
+.venv-unimate/

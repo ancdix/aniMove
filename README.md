@@ -1,8 +1,14 @@
 # aniMove
 
-AnyTop motion generation and Blender ingestion for the robot motion lab.
+AnyTop and UniMate motion generation with Blender ingestion for the creature motion lab.
 
-The current direction is [Pilgrim Machine: a rigged creature and finished animation](docs/pilgrim_machine_execution_plan.md), based on the supplied design spec and artwork. The **first blockout and direct custom-skeleton AnyTop pilot are built**: a verified authored pose envelope and a separate raw-versus-fitted generated-motion comparison are loaded in Blender. See [Pilgrim results, previews, and remaining rig/motion work](docs/pilgrim_blockout_results.md). Detailed modeling and fabric remain deferred until usable blockout animation is established.
+**UniMate raw bring-up is complete through the 80-sample Pilgrim harvest and raw AnyTop comparison.** Text drives walking and turning, while ground contact, recovery and longer text sequences remain unreliable. All 80 raw Actions are loaded in `PILGRIM_UniMate_RAW`; no cleanup or authored choreography was applied. See [results, gallery, master and expansion failures](docs/unimate_pilgrim_results.md).
+
+**Joint-label conditioning is now tested:** 27 matched raw clips plus three exact replays establish that labels change motion. Front/hind names lower posture but do not guarantee quadrupedal support. See [comparison results and Blender review](docs/unimate_label_ablation_results.md) and [accepted semantic labels](docs/unimate_joint_label_guide.md).
+
+**Biped → quadruped → biped feasibility:** 27 new raw samples preserve useful short-prompt bipedal walking, but no four-limb gait passed visual review. The complete diagnostic study and 28-Action Blender master are linked in [the support-transition results](docs/unimate_support_transition_results.md).
+
+The current direction is [Pilgrim Machine: a rigged creature and finished animation](docs/pilgrim_machine_execution_plan.md). **Motion Harvest 001 now contains 120 unguided samples, three curated generated phrases, and a verified six-second Orient loop.** The native phrases retain all fitted body/head frames; fitting, inferred contacts, constant limb-clearance changes, and the loop boundary edit are measured separately. See [harvest results, videos, catalog, and Blender master](docs/pilgrim_motion_harvest_001.md). These are discovered upper-body gestures; robust new support-role transitions remain unproven. The [authored First Genuflection study](docs/pilgrim_genuflection_results.md), [Devotional Hold](docs/pilgrim_devotional_loop_results.md), and [direct custom-skeleton pilot](docs/pilgrim_blockout_results.md) remain preserved. Detailed modeling and fabric are deferred.
 
 The earlier design is in [the original plan](docs/anytop_blender_robot_motion_lab_plan.md); source-level caveats are in [the implementation review](docs/anytop_blender_robot_motion_lab_review.md).
 
@@ -78,3 +84,7 @@ The output `.blend` must not already exist. Its adjacent `.validation.json` reco
 ```
 
 The editing input defect is repaired and tested through the in-betweening experiment; see its report for the exact validation scope. Generation, ingestion, contact screening, Hound-to-robot transfer and controlled in-betweening are implemented. Broader morphology/gait validation, loops, and rhythm remain later milestones.
+
+## Interactive UniMate Motion Lab
+
+A local Blender panel now supports text prompts, seeds, 2–12 second generation, playback/history and saving. Targets: 48-joint mammal, 49-joint bird, 43-joint six-legged insect, and both Pilgrim references. See [usage and duration notes](docs/unimate_motion_lab.md). All generated assets remain on ShareDrive.

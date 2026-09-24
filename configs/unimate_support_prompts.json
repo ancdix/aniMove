@@ -1,0 +1,5 @@
+{
+  "biped": "The creature walks forward upright on its two hind legs, with its front limbs held off the ground.",
+  "quad": "The creature walks forward on all four legs, alternately planting its front and hind feet on the ground.",
+  "crawl": "The creature crawls forward on its hands and feet with its body held low over the ground."
+}

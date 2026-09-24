@@ -1,0 +1,346 @@
+UniML3D is the dataset/canonicalization methodology; UniMate is the generator trained on it. The released pipeline already has a custom-asset path that creates the same cond.npy topology representation used during training. 
+Keep this separate from AnyTop and Blender Python.
+```
+git clone https://github.com/Friedrich-M/UniMate.git
+cd UniMate
+
+conda create -n unimate python=3.10 -y
+conda activate unimate
+
+pip install "setuptools<81"
+pip install -r requirements.txt --no-build-isolation
+```
+The official repo currently targets Python 3.10 and uses one environment for inference plus data processing. 
+Record the commit:
+```
+git rev-parse HEAD
+```
+Don't train anything yet.
+```
+hf download tarn59/UniMate-Weights \
+  --local-dir outputs/uniml3d_60frames_graph_adaln
+```
+Use the .pt checkpoint through the stock sampler initially rather than wiring the safetensors manually.
+This checkpoint is:
+```
+74.1M parameters
+60-frame generation
+max_joints = 61
+EMA inference weights ≈ 283 MB
+```
+and is an independent training run, not the authors' official checkpoint. 
+For this checkpoint:
+keep the inference skeleton ≤61 joints.
+Your current Pilgrim rig should be easy to fit under that if we only expose meaningful deform/motion joints and discard Blender control/helper bones.
+First prove:
+```
+checkpoint
++
+known UniML3D skeleton
++
+text
+↓
+motion.npy + preview
+```
+Use a known skeleton such as a dog/bear/Objaverse creature and prompts close to the vocabulary in your clips.csv.
+Example:
+```
+{
+  "Dog-test01": "The creature walks forward slowly.",
+  "Dog-test02": "The creature lowers its body and moves cautiously."
+}
+```
+Then:
+```
+python -m unimate.inference.sample \
+    --exp_dir outputs/uniml3d_60frames_graph_adaln \
+    --test_cases_json cases.json \
+    --num_repetitions 4 \
+    --batch_size 1
+```
+Expected output includes:
+```
+motions/*.npy            # (T,J,12)
+animations/*_fk.mp4
+animations/*_tpos.png
+captions.json
+```
+The stock sampler generates 60-frame feature sequences and renders skeleton previews. 
+Gate 1: don't continue until text visibly affects generated motion.
+This is the important part.
+Export a clean animation skeleton from Blender, not the whole Blender control rig.
+Something approximately:
+```
+root
+ └─ core
+     ├─ spine_01
+     │   ├─ spine_02
+     │   │   ├─ neck
+     │   │   ├─ limb_A...
+     │   │   └─ limb_B...
+     │
+     ├─ limb_C...
+     └─ limb_D...
+```
+Remove:
+-  IK targets 
+-  pole targets 
+-  widgets 
+-  mechanism bones 
+-  helper constraints 
+-  non-deforming decorative bones unless motion-important 
+Keep meaningful joint names.
+For example:
+```
+Root
+Hips/Core
+Spine
+Chest
+Neck
+Head
+
+Left Upper Arm
+Left Forearm
+Left Hand
+
+Right Upper Arm
+...
+
+Left Thigh
+Left Shin
+Left Foot
+...
+```
+even if Pilgrim is visually a machine.
+UniMate embeds cleaned joint names as part of its representation, so semantic names are preferable to joint_014. 
+The repo now explicitly supports this.
+Something like:
+```
+CHAR_PATH=/path/to/pilgrim.glb \
+OUTPUT_DIR=outputs/pilgrim \
+FACE_R=RightThigh \
+FACE_L=LeftThigh \
+FORMATS=glb,fbx \
+bash data_process/scripts/run_preprocess_char.sh
+```
+For a body where hip/thigh direction isn't meaningful, we can instead define its body axis.
+It should produce:
+```
+outputs/pilgrim/
+├── pilgrim_canonical.glb
+├── pilgrim_canonical.fbx
+├── cond.npy
+└── motions/
+```
+The cond.npy contains the important morphology representation:
+```
+parents
+offsets
+T-pose
+joint names
+clean joint names
+graph distances
+joint relations
+depths
+edge graph
+Laplacian/spectral features
+kinematic chains
+scale / ground calibration
+facing information
+```
+That's essentially Pilgrim expressed in UniML3D's language. 
+There's a slightly awkward implementation detail in the current inference code.
+Although the model conceptually only needs topology + text for free generation, the released sampler currently selects a reference clip belonging to that object type to construct the inference condition. An object with only cond.npy and no loaded motion isn't considered a usable test object. 
+So initially I'd put one innocuous motion on Pilgrim before preprocessing:
+```
+60–90 frames
+
+small torso sway
+tiny weight shift
+no major choreography
+30 fps
+```
+Not because UniMate needs to imitate it.
+It's basically a registration clip that lets the current data loader instantiate the skeleton.
+Later we can patch the sampler to create a condition directly from cond.npy and eliminate this requirement.
+That's a cleaner v2.
+Before generation, inspect:
+```
+original Pilgrim
+vs
+pilgrim_canonical
+```
+Check:
+-  facing direction correct 
+-  upright orientation correct 
+-  ground height sane 
+-  A/B/C/D aren't swapped 
+-  limb chains intact 
+-  joint order sensible 
+-  no helper bones sneaked in 
+-  no unexpected skeleton pruning 
+This deserves care because UniML3D canonicalizes each body according to T-pose, facing direction, scale and grounding. A bad facing annotation can make otherwise good generation look nonsensical. 
+Do not start with:
+“Pilgrim performs an eerie devotional genuflection.”
+Use your uploaded clips.csv to stay close to the learned vocabulary.
+I'd make:
+```
+{
+  "Pilgrim-p01": "The creature stands still and shifts its weight.",
+  "Pilgrim-p02": "The creature slowly lowers its body.",
+  "Pilgrim-p03": "The creature crouches low and moves forward.",
+  "Pilgrim-p04": "The creature raises its torso.",
+  "Pilgrim-p05": "The creature extends one front limb toward the ground.",
+  "Pilgrim-p06": "The creature twists its body while standing.",
+  "Pilgrim-p07": "The creature walks forward slowly.",
+  "Pilgrim-p08": "The creature lowers its head and cautiously moves forward.",
+  "Pilgrim-p09": "The creature stumbles backward and recovers.",
+  "Pilgrim-p10": "The creature lowers itself and remains still."
+}
+```
+Run perhaps:
+```
+10 prompts
+×
+8 seeds
+=
+80 raw motions
+```
+No IK.
+No guide.
+No cleanup.
+That's important.
+Your Blender/MCP agent imports all samples into a review scene:
+```
+PILGRIM_UniMate_RAW
+```
+For every sample preserve:
+```
+prompt
+seed
+CFG
+raw .npy
+raw FK motion
+```
+Then automatically extract:
+```
+root trajectory
+A/B/C/D trajectory
+minimum ground height
+likely contact intervals
+torso orientation
+head orientation
+joint velocity
+joint acceleration
+```
+And generate a thumbnail/video grid.
+At this stage we're asking:
+Does the prompt cause recognizable macro-behavior on Pilgrim?
+Not:
+Is it production ready?
+Use exactly the test your previous work needs.
+For equivalent raw clips compare:
+```
+AnyTop
+vs
+UniMate
+```
+on:
+Does "crouch" actually crouch?
+Does "walk" actually travel?
+Does "extend one front limb" produce that structure?
+-  coherent? 
+-  organic? 
+-  interesting? 
+-  repetitive? 
+-  jittery? 
+-  ground penetration 
+-  foot slip 
+-  limb inversion 
+-  self-intersection 
+-  would I actually use this? 
+-  distinctive? 
+-  does it suggest a behavior I didn't author? 
+And most importantly:
+```
+correction required
+```
+Your earlier AnyTop experiment showed the final animation became much closer to the authored guide than the generated source. UniMate should be judged by whether it reduces that gap.
+This is where it becomes much more interesting.
+Probably first.
+```
+{
+  "Pilgrim-ritual01": [
+    "The creature stands still.",
+    "The creature slowly lowers its body.",
+    "The creature moves forward on all four limbs.",
+    "The creature slowly rises."
+  ]
+}
+```
+UniMate generates consecutive segments and pins an overlap from each previous segment into the next. This does not require a ground-truth choreography clip. 
+This may be much closer to the Pilgrim workflow we originally wanted.
+Later:
+```
+pose A
+   ↓
+generated middle
+   ↓
+pose B
+```
+The current implementation requires an actual clip to clamp against.
+For example:
+```
+keep:
+C + D + core
+
+regenerate:
+A + B + head
+
+prompt:
+"The creature reaches cautiously toward the ground."
+```
+UniMate can keep selected joints fixed and regenerate the rest under a new prompt. 
+This could be much cleaner than the custom mask hacking we were doing with AnyTop.
+Eventually:
+```
+UNI MATE
+text + morphology
+      ↓
+raw motion
+      ↓
+Blender
+      ├─ contact detection
+      ├─ IK
+      ├─ joint limits
+      ├─ collision correction
+      ├─ loop correction
+      └─ artistic timing
+      ↓
+final Pilgrim Action
+```
+But don't apply any of this during the first evaluation.
+We want to know what UniMate actually contributes before the Blender system starts hiding its weaknesses.
+I'd keep the bring-up very small:
+```
+P0  Repo runs
+ ↓
+P1  Third-party checkpoint loads
+ ↓
+P2  Known skeleton responds to text
+ ↓
+P3  Pilgrim → cond.npy successfully
+ ↓
+P4  Pilgrim raw text generation works
+ ↓
+P5  80-sample prompt/seed harvest
+ ↓
+P6  Compare raw UniMate vs raw AnyTop
+ ↓
+P7  Try motion expansion
+ ↓
+P8  Blender IK/cleanup
+ ↓
+P9  finished Pilgrim loop
+```
+The critical milestone is P4.
