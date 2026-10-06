@@ -87,4 +87,4 @@ The editing input defect is repaired and tested through the in-betweening experi
 
 ## Interactive UniMate Motion Lab
 
-A local Blender panel now supports text prompts, seeds, 2–12 second generation, playback/history and saving. Targets: 48-joint mammal, 49-joint bird, 43-joint six-legged insect, and both Pilgrim references. See [usage and duration notes](docs/unimate_motion_lab.md). All generated assets remain on ShareDrive.
+A local Blender panel now uses the authors' official UniMate v2 checkpoint on CUDA, with text prompts, seeds, 2–12 second generation, playback/history and saving. Targets: 48-joint mammal, 49-joint bird, 43-joint six-legged insect, and both Pilgrim references. Earlier independent-checkpoint results remain labeled in history. See [usage and duration notes](docs/unimate_motion_lab.md). All generated assets remain on ShareDrive.

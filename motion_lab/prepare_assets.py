@@ -3,7 +3,9 @@ import json,sys,copy,shutil
 from collections import deque
 from pathlib import Path
 import numpy as np
-BASE=Path('/media/ipsedesktop/ShareDrive1/ModelData/aniMove/unimate');OUT=BASE/'motion_lab_v001';sys.path.insert(0,str(BASE/'UniMate'))
+BASE=Path('/media/ipsedesktop/ShareDrive1/ModelData/aniMove/unimate');OUT=BASE/'motion_lab_v001'
+MODEL=json.loads((Path(__file__).resolve().parents[1]/'configs/motion_lab_model.json').read_text())
+sys.path.insert(0,str(BASE/MODEL['source_directory']))
 from Animation import offsets_from_positions
 from Quaternions import Quaternions
 from unimate.utils.topology_utils import compute_edge_indexs,compute_joint_depths,compute_edge_relations_and_distances,compute_laplacian_eigenvectors

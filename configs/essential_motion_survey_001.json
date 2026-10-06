@@ -1,0 +1,490 @@
+{
+  "id": "essential_motion_001_20260930",
+  "title": "Essential Motion Survey 001",
+  "targets": [
+    "Mammal",
+    "Bird",
+    "Insect",
+    "Pilgrim",
+    "PilgrimQuad",
+    "Humanoid",
+    "Humanoid4Arm",
+    "PentapedRadial",
+    "PentapedTripod"
+  ],
+  "seeds": [
+    12001,
+    12002,
+    12003,
+    12004
+  ],
+  "seconds": 2,
+  "guidance_scale": 3.0,
+  "max_attempts": 2,
+  "prompts": [
+    {
+      "id": "G01",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward."
+    },
+    {
+      "id": "G02",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward slowly."
+    },
+    {
+      "id": "G03",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward quickly."
+    },
+    {
+      "id": "G04",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks backward."
+    },
+    {
+      "id": "G05",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object takes small steps sideways to the left."
+    },
+    {
+      "id": "G06",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object takes small steps sideways to the right."
+    },
+    {
+      "id": "G07",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object turns left in place."
+    },
+    {
+      "id": "G08",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object turns right in place."
+    },
+    {
+      "id": "G09",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward while turning left."
+    },
+    {
+      "id": "G10",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward while turning right."
+    },
+    {
+      "id": "G11",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object runs forward."
+    },
+    {
+      "id": "G12",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object shifts its weight while standing."
+    },
+    {
+      "id": "G13",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object lowers its body toward the ground."
+    },
+    {
+      "id": "G14",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object rises from a crouched position."
+    },
+    {
+      "id": "G15",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object turns its head from side to side."
+    },
+    {
+      "id": "G16",
+      "family": "General",
+      "intended_targets": [
+        "Mammal",
+        "Bird",
+        "Insect",
+        "Pilgrim",
+        "PilgrimQuad",
+        "Humanoid",
+        "Humanoid4Arm",
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object jumps upward and lands."
+    },
+    {
+      "id": "Q01",
+      "family": "Quadruped",
+      "intended_targets": [
+        "Mammal",
+        "PilgrimQuad"
+      ],
+      "text": "An object trots forward on all fours."
+    },
+    {
+      "id": "Q02",
+      "family": "Quadruped",
+      "intended_targets": [
+        "Mammal",
+        "PilgrimQuad"
+      ],
+      "text": "An object gallops forward."
+    },
+    {
+      "id": "Q03",
+      "family": "Quadruped",
+      "intended_targets": [
+        "Mammal",
+        "PilgrimQuad"
+      ],
+      "text": "An object sits down on its hindquarters."
+    },
+    {
+      "id": "Q04",
+      "family": "Quadruped",
+      "intended_targets": [
+        "Mammal",
+        "PilgrimQuad"
+      ],
+      "text": "An object lies down on its belly."
+    },
+    {
+      "id": "B01",
+      "family": "Bird",
+      "intended_targets": [
+        "Bird"
+      ],
+      "text": "An object flaps its wings while standing."
+    },
+    {
+      "id": "B02",
+      "family": "Bird",
+      "intended_targets": [
+        "Bird"
+      ],
+      "text": "An object flies forward while flapping its wings."
+    },
+    {
+      "id": "B03",
+      "family": "Bird",
+      "intended_targets": [
+        "Bird"
+      ],
+      "text": "An object folds its wings against its body."
+    },
+    {
+      "id": "B04",
+      "family": "Bird",
+      "intended_targets": [
+        "Bird"
+      ],
+      "text": "An object lowers its head and pecks at the ground."
+    },
+    {
+      "id": "I01",
+      "family": "Insect",
+      "intended_targets": [
+        "Insect"
+      ],
+      "text": "An object walks forward on six legs."
+    },
+    {
+      "id": "I02",
+      "family": "Insect",
+      "intended_targets": [
+        "Insect"
+      ],
+      "text": "An object moves its antennae while standing."
+    },
+    {
+      "id": "I03",
+      "family": "Insect",
+      "intended_targets": [
+        "Insect"
+      ],
+      "text": "An object cleans its antennae with its front legs."
+    },
+    {
+      "id": "I04",
+      "family": "Insect",
+      "intended_targets": [
+        "Insect"
+      ],
+      "text": "An object lifts its front legs while supported by its other legs."
+    },
+    {
+      "id": "H01",
+      "family": "Humanoid",
+      "intended_targets": [
+        "Humanoid",
+        "Humanoid4Arm"
+      ],
+      "text": "An object jogs forward on two legs."
+    },
+    {
+      "id": "H02",
+      "family": "Humanoid",
+      "intended_targets": [
+        "Humanoid",
+        "Humanoid4Arm"
+      ],
+      "text": "An object squats down."
+    },
+    {
+      "id": "H03",
+      "family": "Humanoid",
+      "intended_targets": [
+        "Humanoid",
+        "Humanoid4Arm"
+      ],
+      "text": "An object reaches forward with one hand."
+    },
+    {
+      "id": "H04",
+      "family": "Humanoid",
+      "intended_targets": [
+        "Humanoid",
+        "Humanoid4Arm"
+      ],
+      "text": "An object balances on one leg."
+    },
+    {
+      "id": "A01",
+      "family": "Upright / multiple arms",
+      "intended_targets": [
+        "Pilgrim",
+        "Humanoid4Arm"
+      ],
+      "text": "An object places its hands on the ground and leans forward."
+    },
+    {
+      "id": "A02",
+      "family": "Upright / multiple arms",
+      "intended_targets": [
+        "Pilgrim",
+        "Humanoid4Arm"
+      ],
+      "text": "An object lifts its front limbs and stands on its hind legs."
+    },
+    {
+      "id": "A03",
+      "family": "Upright / multiple arms",
+      "intended_targets": [
+        "Pilgrim",
+        "Humanoid4Arm"
+      ],
+      "text": "An object raises its upper arms while keeping its lower arms lowered."
+    },
+    {
+      "id": "A04",
+      "family": "Upright / multiple arms",
+      "intended_targets": [
+        "Pilgrim",
+        "Humanoid4Arm"
+      ],
+      "text": "An object reaches forward with its lower arms."
+    },
+    {
+      "id": "P01",
+      "family": "Five limbs",
+      "intended_targets": [
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object walks forward on five legs."
+    },
+    {
+      "id": "P02",
+      "family": "Five limbs",
+      "intended_targets": [
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object turns while taking short steps with its five legs."
+    },
+    {
+      "id": "P03",
+      "family": "Five limbs",
+      "intended_targets": [
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object lifts one leg while standing on its other four legs."
+    },
+    {
+      "id": "P04",
+      "family": "Five limbs",
+      "intended_targets": [
+        "PentapedRadial",
+        "PentapedTripod"
+      ],
+      "text": "An object stands on three hind legs while lifting its front limbs."
+    }
+  ]
+}

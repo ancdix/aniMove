@@ -1,0 +1,13 @@
+{
+  "label": "Official UniMate v2",
+  "repository": "Linzhan/UniMate",
+  "revision": "387a344c3031299bc25fcbef35d36bd186d5afe7",
+  "model": "unimate_uniml3d_f60_v2",
+  "weights_directory": "weights_official_v2",
+  "checkpoint": "checkpoints/checkpoint_step_100000.pt",
+  "checkpoint_sha256": "cbcfb7a057e45f967d5964fecf6b3f83358096f1306f25831e1644a18a50eb34",
+  "config_sha256": "83d28a41f1a80ba71811318f1fc803dc54d9f923c1cb9ccdca9e6c34deac232c",
+  "stats_sha256": "c13ecfe8317c5e7b4a04089b71817d0787494d8f3f1df66b0ac8f496842d2c89",
+  "source_directory": "UniMate_official_v2",
+  "source_revision": "5d6aabedd947297b5ba6706d8e9113e68c0c3e4f"
+}
